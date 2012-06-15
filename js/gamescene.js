@@ -5,54 +5,90 @@
 
 (function(ns) {
     
+    var TIME = 4;
+    
+    var UI_DATA = {
+        "scoreLabel": {
+            "type"      : "text",
+            "rect"      : [120, 40, 300, 50],
+            "color"     : "white",
+            "fontSize"  : 20,
+            "text"      : "Score:" + "0000",
+        },
+        "timerLabel": {
+            "type"      : "text",
+            "rect"      : [600, 40, 300, 50],
+            "color"     : "white",
+            "fontSize"  : 20,
+            "text"      : "Time:" + "200",
+        },
+        "leftButton": {
+            "rect"      : [70, 420, 80, 80],
+            "color"     : "white",
+            "fontSize"  : 50,
+            "text"      : "《",
+        },
+        "rightButton": {
+            "rect"      : [70+90, 420, 80, 80],
+            "color"     : "white",
+            "fontSize"  : 50,
+            "text"      : "》",
+        },
+        "aButton": {
+            "rect"      : [640, 420, 80, 80],
+            "color"     : "white",
+            "fontSize"  : 50,
+            "text"      : "A",
+        },
+    }
 
     ns.GameScene = tm.createClass({
         
         superClass: tm.app.Scene,
         
-        init: function() {
+        init: function(mode) {
             this.superInit();
             
             // ゲームデータ取得, 初期化
             this.gameData = tm.util.DataManager.get("game-data");
-            this.gameData.time  = 0;
+            this.gameData.timer = TIME*app.fps;
             this.gameData.score = 0;
             
-            // スコア生成
-            this.scoreLabel = tm.app.Label("Score:" + "0000").addChildTo(this);
-            this.scoreLabel
-                .setPosition(50, 50).setWidth(SCREEN_WIDTH)
-                .setFontSize(20).setFontFamily("Mosamosa");
-            
-            
             // UI
-            this.leftButton = LabelButton("《", true, function() {
+            for (var key in UI_DATA) {
+                var data = UI_DATA[key];
+                if (data.type == "text") {
+                    this[key] = tm.app.Label(data.text).addChildTo(this);
+                    this[key].setFillStyle(data.color);
+                    this[key].setFontSize(data.fontSize);
+                    this[key].setPosition(data.rect[0], data.rect[1]);
+                    this[key].setSize(data.rect[2], data.rect[3]);
+                    this[key].setFontFamily("Mosamosa").setAlign("center");
+                }
+                else {
+                    this[key] = LabelButton(data.text).addChildTo(this);
+                    this[key].setFillStyle(data.color);
+                    this[key].setFontSize(data.fontSize);
+                    this[key].setPosition(data.rect[0], data.rect[1]);
+                    this[key].setSize(data.rect[2], data.rect[3]);
+                }
+            }
+            
+            this.leftButton.onpointingmove = function() {
                 this.player.x -= PLAYER_SPEED;
-            }.bind(this));
-            this.leftButton
-                .addChildTo(this)
-                .setPosition(70, 440).setSize(50, 50)
-                .setFontSize(40).setFontFamily("Mosamosa").setAlign("center");
+            }.bind(this);
             
-            this.rightButton = LabelButton("》", true, function() {
+            this.rightButton.onpointingmove = function() {
                 this.player.x += PLAYER_SPEED;
-            }.bind(this));
-            this.rightButton
-                .addChildTo(this)
-                .setPosition(70+60, 440).setSize(50, 50)
-                .setFontSize(40).setFontFamily("Mosamosa").setAlign("center");
-            
-            this.aButton = LabelButton("A", false, function() {
+            }.bind(this);
+            this.aButton.onpointingstart = function() {
                 var bullet = Bullet();
                 bullet.setPosition(this.player.x, this.player.y);
                 tm.sound.SoundManager.get("shot").play();
                 
                 app.currentScene.bulletGroup.addChild(bullet);
-            }.bind(this));
-            this.aButton
-                .addChildTo(this)
-                .setPosition(640, 440).setSize(50, 50)
-                .setFontSize(40).setFontFamily("Mosamosa").setAlign("center");
+            }.bind(this);
+            
             
             // プレイヤーを生成
             this.player = Player().addChildTo(this);
@@ -75,11 +111,18 @@
             // サウンドインデックス
             this.soundIndex = 0;
             
-            // this.onmissshot = null;
+            if (mode === "normal") {
+                this.onmissshot = null;
+            }
             //"あなたは地球レベルの規模ではありません.今すぐ宇宙に出て人類を救って下さい.";
         },
         
         update: function(app) {
+            this.timerLabel.text = "Time:" + (this.gameData.timer/app.fps).floor().padding(3, '0');
+            this.gameData.timer -= 1;
+            
+            if (this.gameData.timer <= 0) { this.gameOver("timeover"); }
+            
             if (app.frame%20 == 0) {
                 tm.sound.SoundManager.get("bgm" + this.soundIndex).play();
                 this.soundIndex += 1;

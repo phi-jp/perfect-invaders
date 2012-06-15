@@ -5,6 +5,41 @@
 
 (function(ns) {
     
+    var UI_DATA = {
+        "titleLabel": {
+            "type"      : "text",
+            "rect"      : [SCREEN_CENTER_X, 100, SCREEN_WIDTH, 50],
+            "color"     : "white",
+            "fontSize"  : 40,
+            "text"      : "PERFECT INVADERS",
+        },
+        "perfectButton": {
+            "rect"      : [SCREEN_CENTER_X, 200, 300, 50],
+            "color"     : "red",
+            "fontSize"  : 20,
+            "text"      : "PERFECT MODE",
+        },
+        "normalButton": {
+            "rect"      : [SCREEN_CENTER_X, 260, 300, 50],
+            "color"     : "green",
+            "fontSize"  : 20,
+            "text"      : "NORMAL MODE",
+        },
+        "tweetButton": {
+            "rect"      : [SCREEN_CENTER_X, 320, 300, 50],
+            "color"     : "blue",
+            "fontSize"  : 20,
+            "text"      : "TWEET",
+        },
+        "textLabel": {
+            "type"      : "text",
+            "rect"      : [SCREEN_CENTER_X, 400, SCREEN_WIDTH, 50],
+            "color"     : "white",
+            "fontSize"  : 15,
+            "text"      : "Left/Right arrow - move, SPACE - fire",
+        },
+    };
+    
     ns.TitleScene = tm.createClass({
         
         superClass: tm.app.Scene,
@@ -12,49 +47,37 @@
         init: function(type) {
             this.superInit();
             
+            // UI
+            for (var key in UI_DATA) {
+                var data = UI_DATA[key];
+                if (data.type == "text") {
+                    this[key] = tm.app.Label(data.text).addChildTo(this);
+                    this[key].setFillStyle(data.color);
+                    this[key].setFontSize(data.fontSize);
+                    this[key].setPosition(data.rect[0], data.rect[1]);
+                    this[key].setSize(data.rect[2], data.rect[3]);
+                    this[key].setFontFamily("Mosamosa").setAlign("center");
+                }
+                else {
+                    this[key] = LabelButton(data.text).addChildTo(this);
+                    this[key].setFillStyle(data.color);
+                    this[key].setFontSize(data.fontSize);
+                    this[key].setPosition(data.rect[0], data.rect[1]);
+                    this[key].setSize(data.rect[2], data.rect[3]);
+                }
+            }
             
-            this.title = tm.app.Label("PERFECT INVADERS")
-                .addChildTo(this)
-                .setPosition(SCREEN_CENTER_X, 100).setWidth(SCREEN_WIDTH)
-                .setFontSize(40).setFontFamily("Mosamosa").setAlign("center");
-            
-            this.perfect = LabelButton("PERFECT MODE", false, function() {
+            // perfect mode
+            this.perfectButton.onpointingstart = function() {
                 app.replaceScene(GameScene("perfect"));
-            });
-            this.perfect
-                .addChildTo(this)
-                .setPosition(SCREEN_CENTER_X, 220).setWidth(300).setFillStyle("red")
-                .setFontSize(20).setFontFamily("Mosamosa").setAlign("center");
+            };
             
-            this.normal = LabelButton("NORMAL MODE", false, function() {
+            this.normalButton.onpointingstart = function() {
                 app.replaceScene(GameScene("normal"));
-            });
-            this.normal
-                .addChildTo(this)
-                .setPosition(SCREEN_CENTER_X, 280).setWidth(300).setFillStyle("green")
-                .setFontSize(20).setFontFamily("Mosamosa").setAlign("center");
-            
-            this.tweet = LabelButton("TWEET", false, function() {
-                var url = tm.social.Twitter.createURL({
-                    type        : "tweet",
-                    text        : "プレイしてくれてありがとう",
-                    hashtags    : "javascript,tmlibjs",
-                    url         : "http://tmlife.net",
-                    via         : "phi_jp",
-                });
-                window.open(url, "_self");
-            });
-            this.tweet
-                .addChildTo(this)
-                .setPosition(SCREEN_CENTER_X, 340).setWidth(300).setFillStyle("blue")
-                .setFontSize(20).setFontFamily("Mosamosa").setAlign("center");
-            
-            
-            
-            this.text = tm.app.Label("Left/Right arrow - move, SPACE - fire")
-                .addChildTo(this)
-                .setPosition(SCREEN_CENTER_X, 400).setWidth(SCREEN_WIDTH).setFillStyle("white")
-                .setFontSize(15).setFontFamily("Mosamosa").setAlign("center");
+            };
+            this.tweetButton.onpointingstart = function() {
+                this.tweet();
+            }.bind(this);
             
             return ;
         },
@@ -63,7 +86,14 @@
         },
         
         tweet: function() {
-            
+            var url = tm.social.Twitter.createURL({
+                type        : "tweet",
+                text        : "プレイしてくれてありがとう",
+                hashtags    : "javascript,tmlibjs",
+                url         : "https://github.com/phi1618/perfect-invaders",
+                via         : "phi_jp",
+            });
+            window.open(url, "_self");
         },
         
         onblur: function() {

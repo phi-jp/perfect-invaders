@@ -27,6 +27,8 @@
         init: function(type) {
             this.superInit();
             
+            // ゲームデータ取得, 初期化
+            this.gameData = tm.util.DataManager.get("game-data");
             
             this.title = tm.app.Label(TYPE_TITLE[type])
                 .addChildTo(this)
@@ -38,7 +40,7 @@
                 .setPosition(SCREEN_CENTER_X, 200).setWidth(SCREEN_WIDTH)
                 .setFontSize(25).setFontFamily("Mosamosa").setAlign("center");
             
-            this.scoreLabel = tm.app.Label("SCORE:" + "5100")
+            this.scoreLabel = tm.app.Label("SCORE:" + this.gameData.score)
                 .addChildTo(this)
                 .setPosition(SCREEN_CENTER_X, 300).setWidth(SCREEN_WIDTH)
                 .setFontSize(40).setFontFamily("Mosamosa").setAlign("center");
@@ -73,7 +75,13 @@
         },
         
         tweet: function() {
-            
+            var url = tm.social.Twitter.createURL({
+                type        : "tweet",
+                text        : "SCORE:{0} {1}".format(this.gameData.score, "プレイしてくれてありがとう"),
+                hashtags    : "javascript,tmlibjs",
+                url         : "https://github.com/phi1618/perfect-invaders",
+            });
+            window.open(url, "_self");
         },
         
         onblur: function() {
