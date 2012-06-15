@@ -35,7 +35,7 @@ tm.preload(function() {
     
     tm.sound.SoundManager.add("alien-crash", "sound/alien_crash");
     tm.sound.SoundManager.add("shot", "sound/shot");
-    tm.sound.SoundManager.add("ufo-crash", "sound/8");
+    tm.sound.SoundManager.add("ufo-crash", "sound/ufo");
     
     tm.sound.SoundManager.add("bgm0", "sound/bgm_se0");
     tm.sound.SoundManager.add("bgm1", "sound/bgm_se1");
