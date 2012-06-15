@@ -44,14 +44,12 @@
         init: function() {
             this.superInit(PLAYER_WIDTH, PLAYER_HEIGHT);
             
-            // this.canvas.clearColor("white");
-            // this.canvas.setTransformCenter();
-            // this.canvas.fillStyle = "red";
-            // this.canvas.fillPolygon(0, 0, 25, 3);
             this.canvas.drawTexture(IMAGE, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT);
         },
         
+        
         update: function(app) {
+            /*
             if (app.keyboard.getKey("left"))    { this.x -= PLAYER_SPEED; }
             if (app.keyboard.getKey("right"))   { this.x += PLAYER_SPEED; }
             if (app.keyboard.getKeyDown("space"))   {
@@ -63,7 +61,26 @@
                     app.currentScene.bulletGroup.addChild(bullet);
                 }
             }
-        }
+            */
+        },
+        
+        onmoveleft: function() {
+            this.x -= PLAYER_SPEED;
+        },
+        
+        onmoveright: function() {
+            this.x += PLAYER_SPEED;
+        },
+        
+        onshot: function() {
+            var bullet = Bullet();
+            bullet.setPosition(this.x, this.y);
+            tm.sound.SoundManager.get("shot").play();
+            
+            if (app.currentScene.bulletGroup) {
+                app.currentScene.bulletGroup.addChild(bullet);
+            }
+        },
     });
     
     

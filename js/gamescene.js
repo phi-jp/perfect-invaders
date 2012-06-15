@@ -75,18 +75,14 @@
             }
             
             this.leftButton.onpointingmove = function() {
-                this.player.x -= PLAYER_SPEED;
+                this.player.dispatchEvent(tm.event.Event("moveleft"));
             }.bind(this);
             
             this.rightButton.onpointingmove = function() {
-                this.player.x += PLAYER_SPEED;
+                this.player.dispatchEvent(tm.event.Event("moveright"));
             }.bind(this);
             this.aButton.onpointingstart = function() {
-                var bullet = Bullet();
-                bullet.setPosition(this.player.x, this.player.y);
-                tm.sound.SoundManager.get("shot").play();
-                
-                app.currentScene.bulletGroup.addChild(bullet);
+                this.player.dispatchEvent(tm.event.Event("shot"));
             }.bind(this);
             
             
@@ -118,6 +114,11 @@
         },
         
         update: function(app) {
+            // プレイヤー操作
+            if (app.keyboard.getKey("left")) this.player.dispatchEvent(tm.event.Event("moveleft"));
+            if (app.keyboard.getKey("right")) this.player.dispatchEvent(tm.event.Event("moveright"));
+            if (app.keyboard.getKeyDown("space")) this.player.dispatchEvent(tm.event.Event("shot"));
+            
             this.timerLabel.text = "Time:" + (this.gameData.timer/app.fps).floor().padding(3, '0');
             this.gameData.timer -= 1;
             

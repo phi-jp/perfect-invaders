@@ -69,44 +69,22 @@ var createBitmapImage = function(bitmapData, color) {
 
 
 var LabelButton = tm.createClass({
-    superClass: tm.app.Label,
+    superClass: tm.app.LabelButton,
     
     init: function(text) {
         this.superInit(text);
         
-        this.alpha = 0.75;
         this.shadowColor = "white";
         this.shadowBlur = 0;
         
-        this.setAlign("center").setBaseline("middle").setFontFamily("Mosamosa");
+        this.setFontFamily("Mosamosa");
         
-        this.interaction.enabled = true;
-        this.interaction.boundingType = "rect";
-        /*
-        this.addEventListener("pointingstart", function() {
-            this.alpha = 1.0;
-        });
-        this.addEventListener("pointingend", function() {
-            this.alpha = 0.75;
-        });
-        */
         this.addEventListener("pointingover", function() {
-            this.alpha = 1.0;
             this.shadowBlur = 5;
         });
         this.addEventListener("pointingout", function() {
-            this.alpha = 0.75;
             this.shadowBlur = 0;
         });
-        
-        /*
-        var d = this.draw;
-        this.draw = function(canvas) {
-            d.call(this, canvas);
-            this.drawBoundingRect(canvas);
-        }
-        /*
-        */
     }
 });
 
