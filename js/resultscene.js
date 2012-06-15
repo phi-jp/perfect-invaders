@@ -13,10 +13,10 @@
     };
     
     var TYPE_MESSAGE = {
-        "gameclear"     : "スゴイ!マサカクリアスルニンゲンガアラワレルトハ!!",
+        "gameclear"     : "スゴイ!!マサカクリアスルニンゲンガアラワレルトハ!!",
         "crashplayer"   : "テキノコウゲキヲウケマシタ.トテモザンネンデス.",
         "missshot"      : "ミスショットデースネー.コノゲームデハユルサレナイヨ.",
-        "timeover"      : "TIME OVER!",
+        "timeover"      : "シッパイヲオソレテハダメ!シッパイシタラオワリナンダケドネ",
     };
     
 
@@ -49,7 +49,7 @@
             this.titleButton = tm.app.Label("BACK TITLE")
                 .addChildTo(this)
                 .setPosition(SCREEN_CENTER_X-160, 400).setWidth(200)
-                .setFontSize(30).setFontFamily("Mosamosa").setAlign("center");
+                .setFontSize(25).setFontFamily("Mosamosa").setAlign("center");
             this.titleButton.interaction.enabled = true;
             this.titleButton.interaction.boundingType = "rect";
             this.titleButton.onpointingover = function() { this.fillStyle = "red"; };
@@ -61,23 +61,23 @@
             this.tweetButton = tm.app.Label("TWEET RESULT")
                 .addChildTo(this)
                 .setPosition(SCREEN_CENTER_X+160, 400).setWidth(200)
-                .setFontSize(30).setFontFamily("Mosamosa").setAlign("center");
+                .setFontSize(25).setFontFamily("Mosamosa").setAlign("center");
             this.tweetButton.interaction.enabled = true;
             this.tweetButton.interaction.boundingType = "rect";
             this.tweetButton.onpointingover = function() { this.fillStyle = "red"; };
             this.tweetButton.onpointingout  = function() { this.fillStyle = "white"; };
             this.tweetButton.onpointingstart = function() {
-                this.tweet();
+                this.tweet(type);
             }.bind(this);
         },
         
         update: function(app) {
         },
         
-        tweet: function() {
+        tweet: function(type) {
             var url = tm.social.Twitter.createURL({
                 type        : "tweet",
-                text        : "SCORE:{0} {1}".format(this.gameData.score, "プレイしてくれてありがとう"),
+                text        : "『Perfect Invaders』\nSCORE:{0} {1} {2}".format(this.gameData.score, TYPE_TITLE[type], TYPE_MESSAGE[type]),
                 hashtags    : "javascript,tmlibjs",
                 url         : "https://github.com/phi1618/perfect-invaders",
             });

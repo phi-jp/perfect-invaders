@@ -5,7 +5,7 @@
 
 (function(ns) {
     
-    var TIME = 4;
+    var TIME = 300;
     
     var UI_DATA = {
         "scoreLabel": {

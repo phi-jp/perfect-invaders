@@ -88,7 +88,7 @@
         tweet: function() {
             var url = tm.social.Twitter.createURL({
                 type        : "tweet",
-                text        : "プレイしてくれてありがとう",
+                text        : "『Perfect Invaders』\nプレイしてくれてありがとう",
                 hashtags    : "javascript,tmlibjs",
                 url         : "https://github.com/phi1618/perfect-invaders",
                 via         : "phi_jp",
