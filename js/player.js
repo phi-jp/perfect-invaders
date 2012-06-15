@@ -110,8 +110,8 @@
                     this.remove();
                     enemy.remove();
                     
-                    var enemyCrash = AlienCrash().addChildTo(app.currentScene);
-                    enemyCrash.setPosition(enemy.x, enemy.y);
+                    // クラッシュイベントを発行
+                    enemy.dispatchEvent(tm.event.Event("crash"));
                     
                     // カレントシーンに敵を倒したことを通知
                     app.currentScene.dispatchEvent(tm.event.Event("defeatenemy"));

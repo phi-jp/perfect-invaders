@@ -4,7 +4,7 @@
 
 (function(ns) {
     
-    var alienBitmapData = [
+    var BITMAP_DATA = [
         "          ",
         "    ##    ",
         "   ####   ",
@@ -17,15 +17,22 @@
         "          ",
     ];
     
-    var IMAGE = createBitmapImage(alienBitmapData, [255, 0, 0]);
+    var IMAGE = createBitmapImage(BITMAP_DATA, [255, 0, 0]);
+    
+    var IMAGE_LIST = {
+        "green" : createBitmapImage(BITMAP_DATA, [0, 255, 0]),
+        "cyan"  : createBitmapImage(BITMAP_DATA, [0, 255, 255]),
+        "purple": createBitmapImage(BITMAP_DATA, [255, 0, 255]),
+    };
     
     ns.Alien = tm.createClass({
         superClass: tm.app.Sprite,
         
-        init: function() {
+        init: function(type) {
             this.superInit(ALIEN_WIDTH, ALIEN_HEIGHT);
             
-            this.canvas.drawTexture(IMAGE, 0, 0, ALIEN_WIDTH, ALIEN_HEIGHT);
+            this.type = type;
+            this.canvas.drawTexture(IMAGE_LIST[type] || IMAGE, 0, 0, ALIEN_WIDTH, ALIEN_HEIGHT);
             
             this.moveFrame = 0;
             this.moveSpeed = 10;
@@ -51,7 +58,12 @@
                 app.currentScene.addChild(alienBullet);
                 alienBullet.setPosition(this.x, this.y);
             }
-        }
+        },
+        
+        oncrash: function() {
+            var enemyCrash = AlienCrash(this.type).addChildTo(app.currentScene);
+            enemyCrash.setPosition(this.x, this.y);
+        },
     });
     
 })(window);
@@ -127,12 +139,20 @@
     
     var IMAGE = createBitmapImage(BITMAP_DATA, [255, 0, 0]);
     
+    var IMAGE_LIST = {
+        "green" : createBitmapImage(BITMAP_DATA, [0, 255, 0]),
+        "cyan"  : createBitmapImage(BITMAP_DATA, [0, 255, 255]),
+        "purple": createBitmapImage(BITMAP_DATA, [255, 0, 255]),
+    };
+    
+    
     ns.AlienCrash = tm.createClass({
         superClass: tm.app.Sprite,
         
-        init: function() {
+        init: function(type) {
             this.superInit(ALIEN_WIDTH, ALIEN_HEIGHT);
-            this.canvas.drawTexture(IMAGE, 0, 0, ALIEN_WIDTH, ALIEN_HEIGHT);
+            this.canvas.drawTexture(IMAGE_LIST[type] || IMAGE, 0, 0, ALIEN_WIDTH, ALIEN_HEIGHT);
+            
             this.timer = 10;
             //this.canvas.clearColor("white");
         },

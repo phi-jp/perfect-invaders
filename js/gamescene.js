@@ -91,12 +91,13 @@
             this.player.setPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT-PLAYER_HEIGHT);
             
             // 敵を生成
+            var typeList = ["green", "green", "cyan", "cyan", "purple"];
             this.enemyGroup = tm.app.CanvasElement().addChildTo(this);
             for (var i=0; i<ALIEN_COL; ++i) {
                 for (var j=0; j<ALIEN_ROW; ++j) {
                     var x = j*40;
                     var y = i*30;
-                    var alien = Alien().addChildTo(this.enemyGroup);
+                    var alien = Alien(typeList[i]).addChildTo(this.enemyGroup);
                     alien.setPosition(x+160-80, y+80);
                 }
             }
