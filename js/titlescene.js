@@ -101,6 +101,9 @@
         init: function(type) {
             this.superInit();
             
+            // ゲームデータ取得, 初期化
+            this.gameData = tm.util.DataManager.get("game-data");
+            
             // UI
             this.fromJSON(UI_DATA);
             
@@ -134,7 +137,7 @@
         tweet: function() {
             var url = tm.social.Twitter.createURL({
                 type        : "tweet",
-                text        : "『Perfect Invaders』\n tmlib.js を使ってインベーダーゲームを作りました. ドSゲーです. キミニクリアデキルカナ??",
+                text        : "『Perfect Invaders』\ntmlib.js を使ってインベーダーゲームを作りました. ドSゲーです. キミニクリアデキルカナ??",
                 hashtags    : "javascript,tmlibjs",
                 url         : "https://github.com/phi1618/perfect-invaders",
                 via         : "phi_jp",

@@ -53,6 +53,7 @@
             this.gameData = tm.util.DataManager.get("game-data");
             this.gameData.timer = TIME*app.fps;
             this.gameData.score = 0;
+            this.gameData.mode = mode;
             
             // UI
             for (var key in UI_DATA) {
@@ -145,6 +146,13 @@
             this.scoreLabel.text = "Score:" + this.gameData.score.padding(4, '0');
             
             if (this.enemyGroup.children.length <= 0) {
+                // 残り時間をスコアに反映させる
+                if (this.gameData.mode === "perfect") {
+                    this.gameData.score += this.gameData.timer * 100;
+                }
+                else {
+                    this.gameData.score += this.gameData.timer * 10;
+                }
                 this.gameClear();
             }
         },
