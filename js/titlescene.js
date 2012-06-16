@@ -6,38 +6,92 @@
 (function(ns) {
     
     var UI_DATA = {
-        "titleLabel": {
-            "type"      : "text",
-            "rect"      : [SCREEN_CENTER_X, 100, SCREEN_WIDTH, 50],
-            "color"     : "white",
-            "fontSize"  : 40,
-            "text"      : "PERFECT INVADERS",
-        },
-        "perfectButton": {
-            "rect"      : [SCREEN_CENTER_X, 200, 300, 50],
-            "color"     : "red",
-            "fontSize"  : 20,
-            "text"      : "PERFECT MODE",
-        },
-        "normalButton": {
-            "rect"      : [SCREEN_CENTER_X, 260, 300, 50],
-            "color"     : "green",
-            "fontSize"  : 20,
-            "text"      : "NORMAL MODE",
-        },
-        "tweetButton": {
-            "rect"      : [SCREEN_CENTER_X, 320, 300, 50],
-            "color"     : "blue",
-            "fontSize"  : 20,
-            "text"      : "TWEET",
-        },
-        "textLabel": {
-            "type"      : "text",
-            "rect"      : [SCREEN_CENTER_X, 400, SCREEN_WIDTH, 50],
-            "color"     : "white",
-            "fontSize"  : 15,
-            "text"      : "Left/Right arrow - move, SPACE - fire",
-        },
+        children: [
+            {
+                "type"      : "Label",
+                "name"      : "titleLabel",
+                
+                "x"         : SCREEN_CENTER_X,
+                "y"         : 85,
+                "width"     : SCREEN_WIDTH, 
+                "height"    : 50,
+                "fillStyle" : "white",
+                
+                "text"      : "PERFECT INVADERS",
+                "align"     : "center",
+                "baseline"  : "middle",
+                "fontSize"  : 40,
+                "fontFamily": "Mosamosa",
+            },
+            {
+                "type"          : "LabelButton",
+                "name"          : "perfectButton",
+                
+                "x"             : SCREEN_CENTER_X,
+                "y"             : 200,
+                "width"         : 300, 
+                "height"        : 50,
+                "fillStyle"     : "red",
+                "shadowColor"   : "white",
+                
+                "text"          : "PERFECT MODE",
+                "align"         : "center",
+                "baseline"      : "middle",
+                "fontSize"      : 20,
+                "fontFamily"    : "Mosamosa",
+            },
+            {
+                "type"          : "LabelButton",
+                "name"          : "normalButton",
+                
+                "x"             : SCREEN_CENTER_X,
+                "y"             : 260,
+                "width"         : 300, 
+                "height"        : 50,
+                "fillStyle"     : "green",
+                "shadowColor"   : "white",
+                
+                "text"          : "NORMAL MODE",
+                "align"         : "center",
+                "baseline"      : "middle",
+                "fontSize"      : 20,
+                "fontFamily"    : "Mosamosa",
+            },
+            {
+                "type"          : "LabelButton",
+                "name"          : "tweetButton",
+                
+                "x"             : SCREEN_CENTER_X,
+                "y"             : 320,
+                "width"         : 300, 
+                "height"        : 50,
+                "fillStyle"     : "blue",
+                "shadowColor"   : "white",
+                
+                "text"          : "TWEET",
+                "align"         : "center",
+                "baseline"      : "middle",
+                "fontSize"      : 20,
+                "fontFamily"    : "Mosamosa",
+            },
+            {
+                "type"      : "Label",
+                "name"      : "textLabel",
+                
+                "x"         : SCREEN_CENTER_X,
+                "y"         : 400,
+                "width"     : SCREEN_WIDTH, 
+                "height"    : 50,
+                "fillStyle" : "white",
+                
+                "text"      : "Left/Right arrow - move, SPACE - fire",
+                "align"     : "center",
+                "baseline"  : "middle",
+                "fontSize"  : 15,
+                "fontFamily": "Mosamosa",
+            },
+            
+        ]
     };
     
     ns.TitleScene = tm.createClass({
@@ -48,23 +102,14 @@
             this.superInit();
             
             // UI
-            for (var key in UI_DATA) {
-                var data = UI_DATA[key];
-                if (data.type == "text") {
-                    this[key] = tm.app.Label(data.text).addChildTo(this);
-                    this[key].setFillStyle(data.color);
-                    this[key].setFontSize(data.fontSize);
-                    this[key].setPosition(data.rect[0], data.rect[1]);
-                    this[key].setSize(data.rect[2], data.rect[3]);
-                    this[key].setFontFamily("Mosamosa").setAlign("center");
-                }
-                else {
-                    this[key] = LabelButton(data.text).addChildTo(this);
-                    this[key].setFillStyle(data.color);
-                    this[key].setFontSize(data.fontSize);
-                    this[key].setPosition(data.rect[0], data.rect[1]);
-                    this[key].setSize(data.rect[2], data.rect[3]);
-                }
+            this.fromJSON(UI_DATA);
+            
+            // 
+            var buttonList = [this.perfectButton, this.normalButton, this.tweetButton];
+            for (var i=0,len=buttonList.length; i<len; ++i) {
+                var button = buttonList[i];
+                button.addEventListener("pointingover", function() { this.shadowBlur = 5; });
+                button.addEventListener("pointingout", function() { this.shadowBlur = 0; });
             }
             
             // perfect mode
@@ -75,6 +120,7 @@
             this.normalButton.onpointingstart = function() {
                 app.replaceScene(GameScene("normal"));
             };
+            
             this.tweetButton.onpointingstart = function() {
                 this.tweet();
             }.bind(this);
@@ -88,7 +134,7 @@
         tweet: function() {
             var url = tm.social.Twitter.createURL({
                 type        : "tweet",
-                text        : "『Perfect Invaders』\nプレイしてくれてありがとう",
+                text        : "『Perfect Invaders』\n tmlib.js を使ってインベーダーゲームを作りました. ドSゲーです. キミニクリアデキルカナ??",
                 hashtags    : "javascript,tmlibjs",
                 url         : "https://github.com/phi1618/perfect-invaders",
                 via         : "phi_jp",
